@@ -1,0 +1,9 @@
+module.exports={
+    database:{
+        dbName:'koa2',
+        host:'localhost',
+        port:3306,
+        user:'root',
+        password:'root',
+    }
+}
