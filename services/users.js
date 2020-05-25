@@ -10,6 +10,7 @@ router.get("/", async (ctx, next) => {
 
 router.post("/dd", ctx => {
     //    const error=new HttpException("我日你妈！！！",1002,500)
+    aaa
     const error = new ParamException()
     // const error = global.errs.ParamException()
     throw error

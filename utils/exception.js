@@ -15,7 +15,15 @@ const catchError = async (ctx, next) => {
 
             }
             ctx.status = error.code
-        }
+            //处理未知异常
+        }else{
+            ctx.body={
+                msg:"出错啦！！！！",
+                error_code:999,
+                requeset:`${ctx.method} ${ctx.path}`
+            }
+            ctx.status=500
+        }   
     }
 
 }
