@@ -1,42 +1,43 @@
 const Koa = require('koa')
-const Router = require('koa-router')
-const app = new Koa()
-const router = new Router()
-
 const views = require('koa-views')
 const co = require('co')
 const convert = require('koa-convert')
 const json = require('koa-json')
+const koaBody = require('koa-body');
 const onerror = require('koa-onerror')
-const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const debug = require('debug')('koa2:server')
 const path = require('path')
 
 const config = require('./config')
-const routes = require('./routes')
 
-const KoaEx = require('koa-exception');
+const catchError = require('./utils/exception')
+const router = require('./routes')
+const app = new Koa()
+
+app.use(catchError)
+
+
+
 
 const port = process.env.PORT || config.port
 
-// error handler
-onerror(app)
-
-app.use(KoaEx('CN'));
+// 使用ctx.body解析中间件
 
 // middlewares
-app.use(bodyparser())
-  .use(json())
+app.use(koaBody({ multipart: true }))
+
+app.use(json())
   .use(logger())
   .use(require('koa-static')(__dirname + '/public'))
   .use(views(path.join(__dirname, '/views'), {
-    options: {settings: {views: path.join(__dirname, 'views')}},
-    map: {'njk': 'nunjucks'},
+    options: { settings: { views: path.join(__dirname, 'views') } },
+    map: { 'njk': 'nunjucks' },
     extension: 'njk'
   }))
-  .use(router.routes())
-  .use(router.allowedMethods())
+
+app.use(router.routes())
+app.use(router.allowedMethods())
 
 // logger
 app.use(async (ctx, next) => {
@@ -46,19 +47,8 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - $ms`)
 })
 
-router.get('/', async (ctx, next) => {
-  // ctx.body = 'Hello World'
-  ctx.state = {
-    title: 'Koa2'
-  }
-  await ctx.render('index', ctx.state)
-})
 
-routes(router)
-app.on('error', function(err, ctx) {
-  console.log(err)
-  logger.error('server error', err, ctx)
-})
+
 
 /**
  *导入Model类 

@@ -18,3 +18,4 @@ User.init({
     email: Sequelize.STRING,
     password: Sequelize.STRING
 }, { sequelize })
+
