@@ -6,6 +6,11 @@ const catchError = async (ctx, next) => {
     try {
         await next()
     } catch (error) {
+        //开发环境
+        // 开发环境要打开 throw error
+        //生产环境
+        // throw error
+
         //已知异常
         if (error instanceof HttpException) {
             ctx.body = {

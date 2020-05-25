@@ -9,7 +9,7 @@ class HttpException extends Error {
 
 }
 
-class ParamException extends HttpException {
+class ParameterException extends HttpException {
 
     constructor(msg, errorCode) {
         super()
@@ -20,5 +20,5 @@ class ParamException extends HttpException {
 }
 module.exports = {
     HttpException,
-    ParamException
+    ParameterException
 }

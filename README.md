@@ -264,4 +264,40 @@ app.use(router.routes())
 app.use(router.allowedMethods())
 
 ```
+#用linValiadtor来验证前端传来的参数
+导入lin-validator.js和util.js
+
+```js
+const { LinValidator,Rule } = require("../utils/lin-validator")
+
+/**
+ * 正整型的校验
+ */
+class IntegerValidator extends LinValidator {
+    constructor(){
+        super()
+        this.id = [
+            new Rule('isInt','需要是正整数',{min:1})
+        ]
+    }
+}
+
+module.exports={
+    IntegerValidator
+}
+```
+
+这里写了一个简单的校验器，必须要super(),而且url中要建议的属性比如是id,这里必须写成id,
+
+里边的规则是一个数组，可以写多个，多个是且的意思！！！！
+
+使用
+
+```
+router.post("/insert/:id",(ctx,next)=>{
+    //假如我们校验id必须是正整型
+    const v=new IntegerValidator().validate(ctx)
+})
+
+```
 
